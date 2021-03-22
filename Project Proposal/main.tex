@@ -1,0 +1,122 @@
+\documentclass[fleqn, 11pt]{article}
+
+\usepackage{verbatim}
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{ulem}
+\usepackage{enumitem}
+\usepackage[left=0.75in, right=0.75in, bottom=0.75in]{geometry}
+\usepackage{graphicx}
+
+\newcommand{\myline}{\par
+  \kern3pt % space above the rules
+  \hrule height 0.5pt
+  \kern2pt % space between the rules
+  \hrule height 0.5pt
+  \kern3pt % space below the rules
+}
+
+\usepackage[T1]{fontenc}
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+
+\usepackage{array}
+\usepackage{caption}
+\usepackage{floatrow}
+\usepackage{multirow}
+
+\usepackage{chngcntr}
+\counterwithin*{equation}{section}
+\counterwithin*{equation}{subsection}
+
+\usepackage{sectsty}
+\sectionfont{\centering}
+
+\usepackage[perpage]{footmisc}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{190100036 \& 190100044}
+\rhead{CS 754: Assignment 3}
+\renewcommand{\footrulewidth}{1.0pt}
+\cfoot{Page \thepage}
+
+\setlength{\parindent}{0em}
+\renewcommand{\arraystretch}{2}%
+
+\title{CS 754: Advanced Image Processing \\ Project Proposal}
+\author{ 
+\begin{tabular}{|c|c|}
+     \hline
+     \textsf{Krushnakant Bhattad} & \textsf{ \hspace{5pt} Devansh Jain \hspace{5pt} } \\
+     \hline
+     \textsf{190100036} & \textsf{190100044}\\
+     \hline
+\end{tabular}
+}
+\date{March 21, 2021}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\myline 
+
+\vspace{20pt}
+
+
+\underline{\large {\textsc{Project Title}}}: 
+
+\medskip  
+
+Implementing Low-rank matrix completion algorithm for Video denoising 
+and comparing it with other 
+denoising algorithms like PCA and VBM3D method. 
+
+\hrulefill 
+
+\vspace{10pt}
+
+\underline{\large {\textsc{Main Reference Paper}}}: 
+
+\medskip 
+
+"Robust video denoising using low rank matrix completion"
+
+by Hui Ji, Chaoqiang Liu, Zuowei Shen, Yuhong Xu.
+
+Link to the paper: \url{https://ieeexplore.ieee.org/document/5539849}
+
+\hrulefill
+
+\vspace{10pt}
+
+\underline{\large {\textsc{Data set to be used}}}: 
+
+\medskip 
+
+The data set can be accessed at: \url{https://media.xiph.org/video/derf/}
+
+\hrulefill
+
+\vspace{10pt}
+
+\underline{\large {\textsc{Validation Strategy}}}: 
+
+\medskip 
+
+We will compare our results to that from the methods with impulsive noise pre-processing, like 
+PCA and VBM3D, with respect to their PSNR values (\underline{P}eak \underline{S}ignal to \underline{N}oise \underline{R}atio) and also visually. 
+
+\vspace{7pt}
+
+\myline 
+
+\end{document}
+
