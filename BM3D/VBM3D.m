@@ -420,15 +420,15 @@ if dump_information == 1,
 
     avi_filename = sprintf('%s%s_%s_BM3D.avi', text_vid, text_psnr, bm3dProfile);
     
-    if exist(avi_filename, 'file') ~= 0,
-        delete(avi_filename);
-    end
-    mov = avifile(avi_filename, 'Colormap', gray(256), 'compression', 'None', 'fps', FRATE);
-    for ii = [1:NumberOfFrames],
-        mov = addframe(mov, uint8(round(255*double(y_hat_wi(:,:,ii)))));
-    end
-    mov = close(mov);
-    fprintf('The denoised video written to: %s.\n\n', avi_filename);
+%     if exist(avi_filename, 'file') ~= 0,
+%         delete(avi_filename);
+%     end
+%     mov = avifile(avi_filename, 'Colormap', gray(256), 'compression', 'None', 'fps', FRATE);
+%     for ii = [1:NumberOfFrames],
+%         mov = addframe(mov, uint8(round(255*double(y_hat_wi(:,:,ii)))));
+%     end
+%     mov = close(mov);
+%     fprintf('The denoised video written to: %s.\n\n', avi_filename);
     
 end
 
