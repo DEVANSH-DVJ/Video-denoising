@@ -53,15 +53,19 @@ if ischar(Xnoisy) == 0;
     if exist(avi_filename, 'file') == 2,
         delete(avi_filename);
     end
-    mov = avifile(avi_filename, 'Colormap', gray(256), 'compression', 'None', 'fps', 30);
+    mov = VideoWriter(avi_filename, 'Uncompressed AVI');
+%     mov.Colormap = gray(256);
+    mov.FrameRate = 30;
     if mean2(Xnoisy) <= 1
         fprintf('Possible error: the input RGB-videos should be in range [0,255] and not in [0,1]!\n');
     else
-        for ii = [1:NumberOfFrames],
-            mov = addframe(mov, uint8(Xnoisy(:,:,:,ii)));
-        end        
+        open(mov);
+        writeVideo(mov, uint8(Xnoisy));
+%         for ii = [1:NumberOfFrames],
+%             mov = addframe(mov, uint8(Xnoisy(:,:,:,ii)));
+%         end
     end
-    mov = close(mov);
+    close(mov);
     
     if dump_information == 1
         fprintf('The input 4-D matrix was written to: %s.\n', avi_filename);
