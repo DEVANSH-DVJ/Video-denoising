@@ -21,3 +21,5 @@ for i=1:5
     figure;
     imshow([x(:,:,:,i) mov(i).cdata frames(:,:,:,i)]);
 end
+
+delete ExternalMatrix*;
