@@ -2,10 +2,10 @@ clc;
 clear;
 close all;
 
-addpath("yuv4mpeg2mov");
-addpath("BM3D");
+addpath('yuv4mpeg2mov');
+addpath('BM3D');
 
-mov = yuv4mpeg2mov("data/akiyo_qcif.y4m");
+mov = yuv4mpeg2mov('data/akiyo_qcif.y4m');
 
 frame1 = mov(1).cdata;
 % imshow(frame1);
