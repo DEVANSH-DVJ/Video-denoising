@@ -10,7 +10,7 @@ addpath("BM3D");
 mov = yuv4mpeg2mov("data/akiyo_qcif.y4m");
 
 sigma = 20;
-k = 0.5;
+k = 5;
 s = 0.3;
 
 dim1 = size(mov(1).cdata, 1);
