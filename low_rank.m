@@ -16,7 +16,7 @@ s = 0.3;
 
 dim1 = size(mov(1).cdata, 1);
 dim2 = size(mov(1).cdata, 2);
-nframes = size(mov, 2);
+nframes = min(size(mov, 2), 50);
 
 frames = zeros([dim1 dim2 nframes], 'uint8');
 for i=1:nframes
@@ -39,6 +39,30 @@ end
 missing1 = (denoised ~= noisy);
 consistency = sum(missing1, 'all') / numel(missing1);
 
-imshow([frames(:,:,1) denoised(:,:,1) noisy(:,:,1) missing1(:,:,1)*255]);
+figure; imshow([frames(:,:,1) denoised(:,:,1) noisy(:,:,1) missing1(:,:,1)*255]);
+
+toc;
+tic;
+
+patchArr = zeros([64 (dim1/4 - 1) (dim2/4 - 1) nframes], 'uint8');
+
+for i=1:nframes
+    for j=1:(dim1/4 - 1)
+        for k=1:(dim2/4 - 1)
+            patchArr(:,j,k,i) = reshape(denoised((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i), [64 1]);
+        end
+    end
+end
+
+indices = patchmatcher(patchArr, 10, 11, 25);
+
+patchMat = zeros(64, size(indices, 2), 'uint8');
+for i=1:size(indices,2)
+    patchMat(:,i) = patchArr(:, indices(1,i), indices(2,i), indices(3,i));
+end
+
+figure; imshow(patchMat);
+S = svd(cast(patchMat, 'double'));
+figure; plot(S);
 
 toc;
