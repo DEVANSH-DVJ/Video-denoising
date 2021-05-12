@@ -8,10 +8,10 @@ addpath("yuv4mpeg2mov");
 addpath("BM3D");
 
 tic;
-mov = yuv4mpeg2mov("data/akiyo_qcif.y4m");
+mov = yuv4mpeg2mov('data/carphone_qcif.y4m');
 
 sigma = 10;
-k = 5;
+k = 10;
 s = 0.3;
 tau = 1.5;
 
@@ -108,3 +108,5 @@ final = final ./ weight;
 figure; imshow([frames(:,:,10) final(:,:,10) denoised(:,:,10) noisy(:,:,10)]);
 
 save('output1', 'frames', 'final', 'denoised', 'noisy', 'patchArr');
+
+10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,10), 'double') - final(:,:,10), 'fro')^2)
