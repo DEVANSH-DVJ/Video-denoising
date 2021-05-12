@@ -36,20 +36,22 @@ for i=1:nframes
     denoised(:,:,i) = adapmedfilt(noisy(:,:,i), 11);
 end
 
-missing1 = (denoised ~= noisy);
-consistency = sum(missing1, 'all') / numel(missing1);
+missing = (denoised ~= noisy);
+consistency = sum(missing, 'all') / numel(missing);
 
-figure; imshow([frames(:,:,1) denoised(:,:,1) noisy(:,:,1) missing1(:,:,1)*255]);
+figure; imshow([frames(:,:,1) denoised(:,:,1) noisy(:,:,1) missing(:,:,1)*255]);
 
 toc;
 tic;
 
 patchArr = zeros([64 (dim1/4 - 1) (dim2/4 - 1) nframes], 'uint8');
+missingArr = false([64 (dim1/4 - 1) (dim2/4 - 1) nframes]);
 
 for i=1:nframes
     for j=1:(dim1/4 - 1)
         for k=1:(dim2/4 - 1)
             patchArr(:,j,k,i) = reshape(denoised((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i), [64 1]);
+            missingArr(:,j,k,i) = reshape(missing((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i), [64 1]);
         end
     end
 end
@@ -57,8 +59,10 @@ end
 indices = patchmatcher(patchArr, 10, 11, 25);
 
 patchMat = zeros(64, size(indices, 2), 'uint8');
+patchOmega = false(64, size(indices, 2));
 for i=1:size(indices,2)
     patchMat(:,i) = patchArr(:, indices(1,i), indices(2,i), indices(3,i));
+    patchOmega(:, i) = ~missingArr(:, indices(1,i), indices(2,i), indices(3,i));
 end
 
 figure; imshow(patchMat);
@@ -66,3 +70,6 @@ S = svd(cast(patchMat, 'double'));
 figure; plot(S);
 
 toc;
+
+save('patchMat', 'patchMat');
+save('patchOmega', 'patchOmega');
