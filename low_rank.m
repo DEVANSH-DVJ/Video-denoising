@@ -57,18 +57,54 @@ for i=1:nframes
     end
 end
 
-indices = patchmatcher(patchArr, 10, 11, 25);
+toc;
+tic;
 
-patchMat = zeros(64, size(indices, 2), 'uint8');
-patchOmega = false(64, size(indices, 2));
-for i=1:size(indices,2)
-    patchMat(:,i) = patchArr(:, indices(1,i), indices(2,i), indices(3,i));
-    patchOmega(:, i) = ~missingArr(:, indices(1,i), indices(2,i), indices(3,i));
-end
+for refj=1:(dim1/4 - 1)
+    for refk=1:(dim2/4 - 1)
+    %     refj = 11;
+    %     refk = 25;
+        refframe = 10;
+
+        indices = patchmatcher(patchArr, refframe, refj, refk);
+
+        patchMat = zeros(64, size(indices, 2), 'uint8');
+        patchOmega = false(64, size(indices, 2));
+        for i=1:size(indices,2)
+            patchMat(:,i) = patchArr(:, indices(1,i), indices(2,i), indices(3,i));
+            patchOmega(:, i) = ~missingArr(:, indices(1,i), indices(2,i), indices(3,i));
+        end
+
+        % figure; imshow(patchMat);
+        % S = svd(cast(patchMat, 'double'));
+        % figure; plot(S);
+
+    %     toc;
+    %     tic;
 
         [denoisedpatchMat, iter] = svt(cast(patchMat, 'double'), patchOmega, tau);
+        for selfind=1+5*(refframe-1):5*refframe
+            if (indices(:, selfind) == [refj; refk; refframe;])
+                break;
+            end
+        end
+        patchArr(:, refj, refk, refframe) = cast(denoisedpatchMat(:, selfind), 'uint8');
 
+    %     toc;
+    end
+end
 toc;
 
-save('patchMat', 'patchMat');
-save('patchOmega', 'patchOmega');
+final = zeros(size(denoised), 'double');
+weight = zeros(size(denoised), 'double');
+for i=1:nframes
+    for j=1:(dim1/4 - 1)
+        for k=1:(dim2/4 - 1)
+            final((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) = final((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) + cast(reshape(patchArr(:,j,k,i), [8 8]), 'double');
+            weight((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) = weight((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) + ones([8 8], 'double');
+        end
+    end
+end
+final = final ./ weight;
+
+figure; imshow([frames(:,:,10) final(:,:,10) denoised(:,:,10) noisy(:,:,10)]);
