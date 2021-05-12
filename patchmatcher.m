@@ -7,7 +7,7 @@ function [indices]=patchmatcher(patchArr,i,j,k)
 
     % Output would be a matrix of pairs (l,m,n)
     % n ranges from 1 to nframes, per n we have 5 pairs
-    % output matrix is 3*(nframes*5)
+    % output matrix is of dimension [3 (nframes*5)]
 
     dim1 = size(patchArr, 2);
     dim2 = size(patchArr, 3);
@@ -15,18 +15,15 @@ function [indices]=patchmatcher(patchArr,i,j,k)
 
     indices = zeros([3 nframes*5], 'uint8');
 
+    patch = cast(patchArr, 'double');
+
+    M_ = sum(abs(patch - patch(:,j,k,i)));
+    M = reshape(M_, [dim1*dim2 nframes]);
+
     for n=1:nframes % for each frame
-        M = zeros([1 dim1*dim2]); % matrix to store the l1 norm of error
-        for l=1:dim1
-            for m=1:dim2
-                % calculate the error and store its l1 norm
-                diffimage = double(patchArr(:,j,k,i)) - double(patchArr(:,l,m,n));
-                M(1,l+dim1*(m-1)) = sum(abs(diffimage));
-            end
-        end
 
         % find 5 indices with minimum error
-        [~,I] = mink(M,5);
+        [~,I] = mink(M(:,n),5);
 
         % find the corresponding patch indices
         [z,t] = inverse(I, dim1);
