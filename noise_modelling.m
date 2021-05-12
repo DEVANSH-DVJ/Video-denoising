@@ -29,7 +29,6 @@ X = rand(dim1, dim2, nframes);
 frames(X < s/2) = 0;
 frames(X > 1 - s/2) = 255;
 
-frames(frames < 0) = 0; frames(frames > 255)= 255; 
+frames(frames < 0) = 0; frames(frames > 255)= 255;
 
 imshow(cast([frames(:,:,5) rgb2gray(mov(5).cdata)], 'uint8'));
-

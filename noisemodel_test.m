@@ -25,4 +25,3 @@ end
 noisy = noisemodel(frames, sigma, k, s);
 
 imshow([frames(:,:,5) noisy(:,:,5)]);
-

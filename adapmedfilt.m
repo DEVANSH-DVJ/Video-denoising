@@ -7,7 +7,7 @@ function [denoised]=adapmedfilt(noisy, Smax)
 
     denoised = noisy;
     alreadyProcessed = false(size(noisy)); % generates a matrix of logical negation
-    
+
     % Iteration.
     for k = 3:2:Smax
         zmin = ordfilt2(noisy, 1, ones(k, k), 'symmetric');
@@ -29,5 +29,3 @@ function [denoised]=adapmedfilt(noisy, Smax)
 
     denoised(~alreadyProcessed) = zmed(~alreadyProcessed);
 end
-
-

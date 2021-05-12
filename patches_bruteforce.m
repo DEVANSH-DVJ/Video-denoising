@@ -55,13 +55,9 @@ for i=1:1
 end
 
 function [l,m]=inverse(rvalue)
-    % If (rvalue-1)=(l-1)+35*(m-1) 
-    % I want to return l and m 
+    % If (rvalue-1)=(l-1)+35*(m-1)
+    % I want to return l and m
     x=floor((rvalue-1)/35);
     l=rvalue-x*35;
     m=x+1;
 end
-
-
-
-

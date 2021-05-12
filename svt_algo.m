@@ -33,16 +33,16 @@ Q = zeros(size(P), 'double');
 for k=1:30
     P_ = Q - P;
     P_(~Omega) = 0;
-    
+
     R = Q - tau * P_;
     [U, S, V] = svd(R);
-    
+
     Q_new = U(:,1:n) * diag(max(diag(S) - tau*mu, 0)) * V(:,1:n)';
-    
+
     if (norm(Q_new - Q, 'fro') <= 1e-5)
         break;
     end
-    
+
     Q = Q_new;
 end
 
