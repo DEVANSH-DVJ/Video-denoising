@@ -60,10 +60,10 @@ end
 toc;
 tic;
 
-for refj=1:(dim1/4 - 1)
-    for refk=1:(dim2/4 - 1)
-    %     refj = 11;
-    %     refk = 25;
+% for refj=1:(dim1/4 - 1)
+%     for refk=1:(dim2/4 - 1)
+        refj = 11;
+        refk = 25;
         refframe = 10;
 
         indices = patchmatcher(patchArr, refframe, refj, refk);
@@ -91,8 +91,8 @@ for refj=1:(dim1/4 - 1)
         patchArr(:, refj, refk, refframe) = cast(denoisedpatchMat(:, selfind), 'uint8');
 
     %     toc;
-    end
-end
+%     end
+% end
 toc;
 
 final = zeros(size(denoised), 'double');
