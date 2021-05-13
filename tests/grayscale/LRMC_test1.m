@@ -27,11 +27,13 @@ end
 
 noisy = noisemodel(frames, sigma, k, s);
 
+tic;
 tau = 1.5;
 kmax = 30;
 tol = 1e-5;
 variant = '01';
 [final, denoised] = LRMC(noisy, frameno, tau, kmax, tol, variant);
+toc;
 
 figure; imshow([frames(:,:,frameno) final(:,:,frameno) denoised(:,:,frameno) noisy(:,:,frameno)]);
 

@@ -27,7 +27,9 @@ end
 
 noisy = noisemodel(frames, sigma, k, s);
 
+tic;
 [~, final]  = VBM3D(noisy, sigma);
+toc;
 
 figure; imshow([frames(:,:,frameno) final(:,:,frameno)*255 noisy(:,:,frameno)]);
 

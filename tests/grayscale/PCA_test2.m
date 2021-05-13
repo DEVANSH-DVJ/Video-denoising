@@ -27,9 +27,11 @@ end
 
 noisy = noisemodel(frames, sigma, k, s);
 
+tic;
 C = 20; % the number of dimensions we are retaining
 variant = '0';
 [final, denoised] = PCA(noisy, frameno, C, variant);
+toc;
 
 figure; imshow([frames(:,:,frameno) final(:,:,frameno) denoised(:,:,frameno) noisy(:,:,frameno)]);
 

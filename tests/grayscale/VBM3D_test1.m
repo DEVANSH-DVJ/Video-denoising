@@ -33,7 +33,9 @@ for i=1:nframes
     denoised(:,:,i) = adapmedfilt(noisy(:,:,i), 11);
 end
 
+tic;
 [~, final]  = VBM3D(denoised, sigma);
+toc;
 
 figure; imshow([frames(:,:,frameno) final(:,:,frameno)*255 denoised(:,:,frameno) noisy(:,:,frameno)]);
 
