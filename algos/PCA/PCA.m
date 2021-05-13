@@ -30,7 +30,7 @@ function [final, denoised] = PCA(noisy, frameno, C, variant)
     for refj=1:(dim1/4 - 1)
         for refk=1:(dim2/4 - 1)
 
-            indices = patchmatcher(patchArr, frameno, refj, refk);
+            indices = patchmatcher(patchArr, refj, refk, frameno);
 
             patchMat = zeros(64, size(indices, 2), 'uint8');
             for i=1:size(indices,2)
