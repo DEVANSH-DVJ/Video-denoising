@@ -4,10 +4,9 @@ close all;
 
 rng(1);
 
-addpath("yuv4mpeg2mov");
-addpath("BM3D");
+addpath('../../libs/yuv4mpeg2mov');
 
-mov = yuv4mpeg2mov("data/akiyo_qcif.y4m");
+mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 frame = rgb2gray(mov(1).cdata);
 noisy = imnoise(frame,'salt & pepper',0.7); % image with salt and pepper noise added
