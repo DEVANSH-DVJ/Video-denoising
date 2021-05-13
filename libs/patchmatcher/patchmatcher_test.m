@@ -28,9 +28,9 @@ for i=1:50
 end
 
 new = reshape(patchArr, [64 35 43 50]);
-
-indices = patchmatcher(new, 10, 11, 25);
-
+tic;
+[indices] = patchmatcher(new, 11, 25, 10);
+toc;
 figure;
 tiledlayout(3, 3)
 
