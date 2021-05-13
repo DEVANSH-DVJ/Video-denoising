@@ -10,7 +10,7 @@ mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 sigma = 20;
 k = 5;
-s = 0.3;
+s = 30;
 
 dim1 = size(mov(1).cdata, 1);
 dim2 = size(mov(1).cdata, 2);

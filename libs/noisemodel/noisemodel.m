@@ -15,8 +15,8 @@ function [noisy]=noisemodel(frames,sigma,k,s)
     noisy = noisy + np + ng;
 
     X = rand(dim1, dim2, nframes);
-    noisy(X < s/2) = 0;
-    noisy(X > 1 - s/2) = 255;
+    noisy(X < s/200) = 0;
+    noisy(X > 1 - s/200) = 255;
 
     noisy = cast(noisy, 'uint8');
     noisy(noisy < 0) = 0;
