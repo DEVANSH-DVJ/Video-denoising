@@ -1,4 +1,4 @@
-function [final, denoised] = LRMC(noisy, frameno, tau, kmax, tol, variant)
+function [recon, filtered] = LRMC(noisy, frameno, tau, kmax, tol, variant)
 
     switch variant
         case '00'
@@ -19,12 +19,12 @@ function [final, denoised] = LRMC(noisy, frameno, tau, kmax, tol, variant)
 
     [dim1, dim2, nframes] = size(noisy);
 
-    denoised = zeros([dim1 dim2 nframes], 'uint8');
+    filtered = zeros([dim1 dim2 nframes], 'uint8');
     for i=1:nframes
-        denoised(:,:,i) = adapmedfilt(noisy(:,:,i), 11);
+        filtered(:,:,i) = adapmedfilt(noisy(:,:,i), 11);
     end
 
-    missing = (denoised ~= noisy);
+    missing = (filtered ~= noisy);
 
     patchArr = zeros([64 (dim1/4 - 1) (dim2/4 - 1) nframes], 'uint8');
     missingArr = false(size(patchArr));
@@ -32,7 +32,7 @@ function [final, denoised] = LRMC(noisy, frameno, tau, kmax, tol, variant)
     for i=1:nframes
         for j=1:(dim1/4 - 1)
             for k=1:(dim2/4 - 1)
-                patchArr(:,j,k,i) = reshape(denoised((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i), [64 1]);
+                patchArr(:,j,k,i) = reshape(filtered((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i), [64 1]);
                 missingArr(:,j,k,i) = reshape(missing((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i), [64 1]);
             end
         end
@@ -66,15 +66,15 @@ function [final, denoised] = LRMC(noisy, frameno, tau, kmax, tol, variant)
         end
     end
 
-    final = zeros(size(denoised), 'double');
-    weight = final;
+    recon = zeros(size(filtered), 'double');
+    weight = recon;
     for i=1:nframes
         for j=1:(dim1/4 - 1)
             for k=1:(dim2/4 - 1)
-                final((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) = final((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) + reshape(denoisedpatchArr(:,j,k,i), [8 8]);
+                recon((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) = recon((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) + reshape(denoisedpatchArr(:,j,k,i), [8 8]);
                 weight((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) = weight((1+4*(j-1)):(4*(j+1)), (1+4*(k-1)):(4*(k+1)),i) + 1;
             end
         end
     end
-    final = final ./ weight;
+    recon = recon ./ weight;
 end
