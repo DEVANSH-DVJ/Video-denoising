@@ -34,11 +34,13 @@ toc;
 
 figure; imshow([frames(:,:,frameno) recon(:,:,frameno) noisy(:,:,frameno)]);
 
-psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno) - recon(:,:,frameno), 'double'), 'fro')^2);
-fprintf('PSNR: %f\n', psnr);
+psnr_noisy = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno) - noisy(:,:,frameno), 'double'), 'fro')^2);
+psnr_recon = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno) - recon(:,:,frameno), 'double'), 'fro')^2);
+fprintf('PSNR of Noisy Image: %f\n', psnr_noisy);
+fprintf('PSNR of Reconstructed Image: %f\n', psnr_recon);
 
 path = sprintf('results/%i_%i_%i/VMB3D_test2/',sigma,k,s);
-save(append(path, 'output'), 'frames', 'noisy', 'recon', 'psnr');
+save(append(path, 'output'), 'frames', 'noisy', 'recon', 'psnr_noisy', 'psnr_recon');
 imwrite([frames(:,:,frameno) recon(:,:,frameno) noisy(:,:,frameno)], append(path, 'combined.png'));
 imwrite(frames(:,:,frameno), append(path, 'original.png'));
 imwrite(noisy(:,:,frameno), append(path, 'noisy.png'));
