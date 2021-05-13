@@ -30,9 +30,18 @@ noisy = noisemodel(frames, sigma, k, s);
 tic;
 C = 20; % the number of dimensions we are retaining
 variant = '0';
-[final, denoised] = PCA(noisy, frameno, C, variant);
+[recon, filtered] = PCA(noisy, frameno, C, variant);
 toc;
 
-figure; imshow([frames(:,:,frameno) final(:,:,frameno) denoised(:,:,frameno) noisy(:,:,frameno)]);
+figure; imshow([frames(:,:,frameno) recon(:,:,frameno) filtered(:,:,frameno) noisy(:,:,frameno)]);
 
-psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,10), 'double') - final(:,:,10), 'fro')^2)
+psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno) - recon(:,:,frameno), 'double'), 'fro')^2);
+fprintf('PSNR: %f\n', psnr);
+
+path = sprintf('results/%i_%i_%i/PCA_test2/',sigma,k,s);
+save(append(path, 'output'), 'frames', 'noisy', 'filtered', 'recon', 'psnr');
+imwrite([frames(:,:,frameno) recon(:,:,frameno) filtered(:,:,frameno) noisy(:,:,frameno)], append(path, 'combined.png'));
+imwrite(frames(:,:,frameno), append(path, 'original.png'));
+imwrite(noisy(:,:,frameno), append(path, 'noisy.png'));
+imwrite(filtered(:,:,frameno), append(path, 'filtered.png'));
+imwrite(recon(:,:,frameno), append(path, 'recon.png'));

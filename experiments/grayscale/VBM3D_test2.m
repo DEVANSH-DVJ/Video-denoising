@@ -28,9 +28,18 @@ end
 noisy = noisemodel(frames, sigma, k, s);
 
 tic;
-[~, final]  = VBM3D(noisy, sigma);
+[~, recon]  = VBM3D(noisy, sigma, 0, 0);
+recon = cast(recon*255, 'uint8');
 toc;
 
-figure; imshow([frames(:,:,frameno) final(:,:,frameno)*255 noisy(:,:,frameno)]);
+figure; imshow([frames(:,:,frameno) recon(:,:,frameno) noisy(:,:,frameno)]);
 
-psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno), 'double') - final(:,:,frameno)*255, 'fro')^2)
+psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno) - recon(:,:,frameno), 'double'), 'fro')^2);
+fprintf('PSNR: %f\n', psnr);
+
+path = sprintf('results/%i_%i_%i/VMB3D_test2/',sigma,k,s);
+save(append(path, 'output'), 'frames', 'noisy', 'recon', 'psnr');
+imwrite([frames(:,:,frameno) recon(:,:,frameno) noisy(:,:,frameno)], append(path, 'combined.png'));
+imwrite(frames(:,:,frameno), append(path, 'original.png'));
+imwrite(noisy(:,:,frameno), append(path, 'noisy.png'));
+imwrite(recon(:,:,frameno), append(path, 'recon.png'));

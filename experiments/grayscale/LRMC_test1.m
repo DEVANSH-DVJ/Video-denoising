@@ -32,9 +32,18 @@ tau = 1.5;
 kmax = 30;
 tol = 1e-5;
 variant = '01';
-[final, denoised] = LRMC(noisy, frameno, tau, kmax, tol, variant);
+[recon, filtered] = LRMC(noisy, frameno, tau, kmax, tol, variant);
 toc;
 
-figure; imshow([frames(:,:,frameno) final(:,:,frameno) denoised(:,:,frameno) noisy(:,:,frameno)]);
+figure; imshow([frames(:,:,frameno) recon(:,:,frameno) filtered(:,:,frameno) noisy(:,:,frameno)]);
 
-psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno), 'double') - final(:,:,frameno), 'fro')^2)
+psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno) - recon(:,:,frameno), 'double'), 'fro')^2);
+fprintf('PSNR: %f\n', psnr);
+
+path = sprintf('results/%i_%i_%i/LRMC_test1/',sigma,k,s);
+save(append(path, 'output'), 'frames', 'noisy', 'filtered', 'recon', 'psnr');
+imwrite([frames(:,:,frameno) recon(:,:,frameno) filtered(:,:,frameno) noisy(:,:,frameno)], append(path, 'combined.png'));
+imwrite(frames(:,:,frameno), append(path, 'original.png'));
+imwrite(noisy(:,:,frameno), append(path, 'noisy.png'));
+imwrite(filtered(:,:,frameno), append(path, 'filtered.png'));
+imwrite(recon(:,:,frameno), append(path, 'recon.png'));
