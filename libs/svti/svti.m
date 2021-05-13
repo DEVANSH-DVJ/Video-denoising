@@ -1,5 +1,5 @@
 
-function [Q, iter]=svt(P, Omega, tau)
+function [Q, iter]=svti(P, Omega, tau)
     % assume noisy patch matrix is of size ([64 n2]) (double)
     % We have to apply singular value thresholding (tolerance 1e-5)
 

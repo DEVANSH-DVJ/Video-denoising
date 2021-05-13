@@ -4,11 +4,14 @@ close all;
 
 rng(1);
 
-addpath("yuv4mpeg2mov");
-addpath("BM3D");
+addpath('../../libs/yuv4mpeg2mov');
+addpath('../../libs/noisemodel');
+addpath('../../libs/adapmedfilt');
+addpath('../../libs/patchmatcher');
+addpath('../../libs/svti');
 
 tic;
-mov = yuv4mpeg2mov('data/carphone_qcif.y4m');
+mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 sigma = 10;
 k = 10;
@@ -18,6 +21,7 @@ tau = 1.5;
 dim1 = size(mov(1).cdata, 1);
 dim2 = size(mov(1).cdata, 2);
 nframes = min(size(mov, 2), 30);
+frameno = 10;
 
 frames = zeros([dim1 dim2 nframes], 'uint8');
 for i=1:nframes
@@ -64,9 +68,8 @@ for refj=1:(dim1/4 - 1)
     for refk=1:(dim2/4 - 1)
 %         refj = 11;
 %         refk = 25;
-        refframe = 10;
 
-        indices = patchmatcher(patchArr, refframe, refj, refk);
+        indices = patchmatcher(patchArr, frameno, refj, refk);
 
         patchMat = zeros(64, size(indices, 2), 'uint8');
         patchOmega = false(64, size(indices, 2));
@@ -75,19 +78,15 @@ for refj=1:(dim1/4 - 1)
             patchOmega(:, i) = ~missingArr(:, indices(1,i), indices(2,i), indices(3,i));
         end
 
-        % figure; imshow(patchMat);
-        % S = svd(cast(patchMat, 'double'));
-        % figure; plot(S);
+        [denoisedpatchMat, iter] = svti(cast(patchMat, 'double'), patchOmega, tau);
 
-        [denoisedpatchMat, iter] = svt(cast(patchMat, 'double'), patchOmega, tau);
-
-        for selfind=1+5*(refframe-1):5*refframe
-            if (indices(:, selfind) == [refj; refk; refframe;])
+        for selfind=1+5*(frameno-1):5*frameno
+            if (indices(:, selfind) == [refj; refk; frameno;])
                 break;
             end
         end
 
-        patchArr(:, refj, refk, refframe) = denoisedpatchMat(:, selfind);
+        patchArr(:, refj, refk, frameno) = denoisedpatchMat(:, selfind);
     end
 end
 
@@ -105,8 +104,8 @@ for i=1:nframes
 end
 final = final ./ weight;
 
-figure; imshow([frames(:,:,10) final(:,:,10) denoised(:,:,10) noisy(:,:,10)]);
+figure; imshow([frames(:,:,frameno) final(:,:,frameno) denoised(:,:,frameno) noisy(:,:,frameno)]);
 
-save('output1', 'frames', 'final', 'denoised', 'noisy', 'patchArr');
+% save('output1', 'frames', 'final', 'denoised', 'noisy', 'patchArr');
 
-10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,10), 'double') - final(:,:,10), 'fro')^2)
+psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno), 'double') - final(:,:,frameno), 'fro')^2)
