@@ -2,10 +2,13 @@ clc;
 clear;
 close all;
 
-addpath('yuv4mpeg2mov');
-addpath('BM3D');
+addpath('../../algos/BM3D');
 
-mov = yuv4mpeg2mov('data/carphone_qcif.y4m');
+addpath('../../libs/yuv4mpeg2mov');
+addpath('../../libs/noisemodel');
+addpath('../../libs/adapmedfilt');
+
+mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 sigma = 10;
 k = 10;
@@ -14,6 +17,7 @@ s = 0.3;
 dim1 = size(mov(1).cdata, 1);
 dim2 = size(mov(1).cdata, 2);
 nframes = min(size(mov, 2), 30);
+frameno = 10
 
 frames = zeros([dim1 dim2 nframes], 'uint8');
 for i=1:nframes
@@ -29,10 +33,6 @@ end
 
 [~, final1]  = VBM3D(denoised, sigma);
 
-figure; imshow([frames(:,:,10) final1(:,:,10)*255 denoised(:,:,10) noisy(:,:,10)]);
+figure; imshow([frames(:,:,frameno) final1(:,:,frameno)*255 denoised(:,:,frameno) noisy(:,:,frameno)]);
 
-10 * log10(144*176*255^2 / norm(cast(frames(:,:,10), 'double') - final1(:,:,10)*255, 'fro')^2)
-
-load('output1');
-
-figure; imshow([frames(:,:,10) final(:,:,10) final1(:,:,10)*255]);
+psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno), 'double') - final1(:,:,frameno)*255, 'fro')^2);
