@@ -4,10 +4,9 @@ close all;
 
 rng(1);
 
-addpath("yuv4mpeg2mov");
-addpath("BM3D");
+addpath('../../libs/yuv4mpeg2mov');
 
-mov = yuv4mpeg2mov("data/akiyo_qcif.y4m");
+mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 sigma = 20;
 k = 5;
