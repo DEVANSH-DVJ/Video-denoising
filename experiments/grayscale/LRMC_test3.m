@@ -28,9 +28,9 @@ end
 noisy = noisemodel(frames, sigma, k, s);
 
 tic;
-tau = 1.5;
-kmax = 30;
-tol = 1e-5;
+tau = 1;
+kmax = 60;
+tol = 1e-7;
 variant = '01';
 [recon, filtered] = LRMC(noisy, frameno, tau, kmax, tol, variant);
 toc;
@@ -44,7 +44,7 @@ fprintf('PSNR of Noisy Image: %f\n', psnr_noisy);
 fprintf('PSNR of Filtered Image: %f\n', psnr_filtered);
 fprintf('PSNR of Reconstructed Image: %f\n', psnr_recon);
 
-path = sprintf('results/%i_%i_%i/LRMC_test1/',sigma,k,s);
+path = sprintf('results/%i_%i_%i/LRMC_test3/',sigma,k,s);
 save(append(path, 'output'), 'frames', 'noisy', 'filtered', 'recon', 'psnr_noisy', 'psnr_filtered', 'psnr_recon');
 imwrite([frames(:,:,frameno) recon(:,:,frameno) filtered(:,:,frameno) noisy(:,:,frameno)], append(path, 'combined.png'));
 imwrite(frames(:,:,frameno), append(path, 'original.png'));

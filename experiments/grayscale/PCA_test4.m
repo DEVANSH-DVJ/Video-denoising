@@ -4,7 +4,7 @@ close all;
 
 rng(1);
 
-addpath('../../algos/LRMC');
+addpath('../../algos/PCA');
 
 addpath('../../libs/yuv4mpeg2mov');
 addpath('../../libs/noisemodel');
@@ -28,11 +28,9 @@ end
 noisy = noisemodel(frames, sigma, k, s);
 
 tic;
-tau = 1.5;
-kmax = 30;
-tol = 1e-5;
-variant = '01';
-[recon, filtered] = LRMC(noisy, frameno, tau, kmax, tol, variant);
+C = 16; % the number of dimensions we are retaining
+variant = '0';
+[recon, filtered] = PCA(noisy, frameno, C, variant);
 toc;
 
 figure; imshow([frames(:,:,frameno) recon(:,:,frameno) filtered(:,:,frameno) noisy(:,:,frameno)]);
@@ -44,7 +42,7 @@ fprintf('PSNR of Noisy Image: %f\n', psnr_noisy);
 fprintf('PSNR of Filtered Image: %f\n', psnr_filtered);
 fprintf('PSNR of Reconstructed Image: %f\n', psnr_recon);
 
-path = sprintf('results/%i_%i_%i/LRMC_test1/',sigma,k,s);
+path = sprintf('results/%i_%i_%i/PCA_test4/',sigma,k,s);
 save(append(path, 'output'), 'frames', 'noisy', 'filtered', 'recon', 'psnr_noisy', 'psnr_filtered', 'psnr_recon');
 imwrite([frames(:,:,frameno) recon(:,:,frameno) filtered(:,:,frameno) noisy(:,:,frameno)], append(path, 'combined.png'));
 imwrite(frames(:,:,frameno), append(path, 'original.png'));

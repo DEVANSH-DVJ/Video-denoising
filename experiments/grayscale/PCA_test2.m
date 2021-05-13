@@ -13,7 +13,7 @@ mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 sigma = 10;
 k = 10;
-s = 50;
+s = 30;
 
 dim1 = size(mov(1).cdata, 1);
 dim2 = size(mov(1).cdata, 2);
@@ -28,7 +28,7 @@ end
 noisy = noisemodel(frames, sigma, k, s);
 
 tic;
-C = 20; % the number of dimensions we are retaining
+C = 4; % the number of dimensions we are retaining
 variant = '0';
 [recon, filtered] = PCA(noisy, frameno, C, variant);
 toc;
