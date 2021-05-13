@@ -11,7 +11,7 @@ addpath('../../libs/noisemodel');
 
 mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
-sigma = 50;
+sigma = 00;
 k = 00;
 s = 50;
 
