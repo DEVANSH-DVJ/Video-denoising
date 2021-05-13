@@ -1,20 +1,20 @@
 function [final, denoised] = LRMC(noisy, frameno, tau, kmax, tol, variant)
 
     switch variant
-        case 1
-            sec_missing = false;
-            replace = true;
-        case 2
-            sec_missing = true;
-            replace = true;
-        case 3
+        case '00'
             sec_missing = false;
             replace = false;
-        case 4
+        case '01'
+            sec_missing = false;
+            replace = true;
+        case '10'
             sec_missing = true;
             replace = false;
+        case '11'
+            sec_missing = true;
+            replace = true;
         otherwise
-            warning('incorrect variant - setting to default 1');
+            warning('incorrect variant - setting to default variant: 01');
     end
 
     [dim1, dim2, nframes] = size(noisy);

@@ -28,11 +28,9 @@ end
 noisy = noisemodel(frames, sigma, k, s);
 
 C = 20; % the number of dimensions we are retaining
-variant = 2;
+variant = '0';
 [final, denoised] = PCA(noisy, frameno, C, variant);
 
 figure; imshow([frames(:,:,frameno) final(:,:,frameno) denoised(:,:,frameno) noisy(:,:,frameno)]);
-
-% save('output1', 'frames', 'final', 'denoised', 'noisy', 'patchArr');
 
 psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,10), 'double') - final(:,:,10), 'fro')^2)

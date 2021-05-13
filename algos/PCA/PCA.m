@@ -1,12 +1,12 @@
 function [final, denoised] = PCA(noisy, frameno, C, variant)
 
     switch variant
-        case 1
-            replace = true;
-        case 2
+        case '0'
             replace = false;
+        case '1'
+            replace = true;
         otherwise
-            warning('incorrect variant - setting to default 1');
+            warning('incorrect variant - setting to default variant: 0');
     end
 
     [dim1, dim2, nframes] = size(noisy);

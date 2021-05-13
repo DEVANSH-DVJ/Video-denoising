@@ -30,11 +30,9 @@ noisy = noisemodel(frames, sigma, k, s);
 tau = 1;
 kmax = 30;
 tol = 1e-5;
-variant = 1;
+variant = '01';
 [final, denoised] = LRMC(noisy, frameno, tau, kmax, tol, variant);
 
 figure; imshow([frames(:,:,frameno) final(:,:,frameno) denoised(:,:,frameno) noisy(:,:,frameno)]);
-
-% save('output1', 'frames', 'final', 'denoised', 'noisy', 'patchArr');
 
 psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno), 'double') - final(:,:,frameno), 'fro')^2)
