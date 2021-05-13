@@ -19,7 +19,6 @@ function [Q, iter]=svti(P, Omega, tau, kmax, tol, sec_missing)
     sigma_hat = mean(sigma_bar);
 
     mu = (8 + sqrt(n2)) * sqrt(p) * sigma_hat;
-    n = min(64, n2);
     lambda = tau*mu;
 
     Q = zeros(size(P), 'double');
@@ -29,9 +28,9 @@ function [Q, iter]=svti(P, Omega, tau, kmax, tol, sec_missing)
         P_(~Omega) = 0;
 
         R = Q - tau * P_;
-        [U, S, V] = svd(R);
+        [U, S, V] = svd(R, 'econ');
 
-        Q_new = U(:,1:n) * diag(max(diag(S) - lambda, 0)) * V(:,1:n)';
+        Q_new = U * diag(max(diag(S) - lambda, 0)) * V';
 
         if (norm(Q_new - Q, 'fro') <= tol)
             break;
