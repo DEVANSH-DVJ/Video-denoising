@@ -13,7 +13,7 @@ mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 sigma = 10;
 k = 10;
-s = 30;
+s = 50;
 
 dim1 = size(mov(1).cdata, 1);
 dim2 = size(mov(1).cdata, 2);
@@ -28,10 +28,10 @@ end
 noisy = noisemodel(frames, sigma, k, s);
 
 tic;
-tau = 1;
+tau = 1.5;
 kmax = 30;
 tol = 1e-5;
-variant = '01';
+variant = '11';
 [recon, filtered] = LRMC(noisy, frameno, tau, kmax, tol, variant);
 toc;
 
