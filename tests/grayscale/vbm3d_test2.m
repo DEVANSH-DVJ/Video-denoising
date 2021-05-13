@@ -2,6 +2,8 @@ clc;
 clear;
 close all;
 
+rng(1);
+
 addpath('../../algos/BM3D');
 
 addpath('../../libs/yuv4mpeg2mov');
