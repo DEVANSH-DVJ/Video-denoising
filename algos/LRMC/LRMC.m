@@ -77,4 +77,5 @@ function [recon, filtered] = LRMC(noisy, frameno, tau, kmax, tol, variant)
         end
     end
     recon = recon ./ weight;
+    recon = cast(recon*255, 'uint8');
 end
