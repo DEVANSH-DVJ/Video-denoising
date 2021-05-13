@@ -31,7 +31,7 @@ function [Q, iter]=svti(P, Omega, tau)
 
         Q_new = U(:,1:n) * diag(max(diag(S) - lambda, 0)) * V(:,1:n)';
 
-        if (norm(Q_new - Q, 'fro') <= 1e-4)
+        if (norm(Q_new - Q, 'fro') <= 1e-5)
             break;
         end
 

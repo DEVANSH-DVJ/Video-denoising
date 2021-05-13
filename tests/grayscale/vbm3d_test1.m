@@ -12,12 +12,12 @@ mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 sigma = 10;
 k = 10;
-s = 0.3;
+s = 0.5;
 
 dim1 = size(mov(1).cdata, 1);
 dim2 = size(mov(1).cdata, 2);
 nframes = min(size(mov, 2), 30);
-frameno = 10
+frameno = 10;
 
 frames = zeros([dim1 dim2 nframes], 'uint8');
 for i=1:nframes
@@ -31,8 +31,8 @@ for i=1:nframes
     denoised(:,:,i) = adapmedfilt(noisy(:,:,i), 11);
 end
 
-[~, final1]  = VBM3D(denoised, sigma);
+[~, final]  = VBM3D(denoised, sigma);
 
-figure; imshow([frames(:,:,frameno) final1(:,:,frameno)*255 denoised(:,:,frameno) noisy(:,:,frameno)]);
+figure; imshow([frames(:,:,frameno) final(:,:,frameno)*255 denoised(:,:,frameno) noisy(:,:,frameno)]);
 
-psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno), 'double') - final1(:,:,frameno)*255, 'fro')^2);
+psnr = 10 * log10(dim1 * dim2 * 255^2 / norm(cast(frames(:,:,frameno), 'double') - final(:,:,frameno)*255, 'fro')^2)
