@@ -1,5 +1,5 @@
 
-function [Q, iter]=svti(P, Omega, tau)
+function [Q, iter]=svti(P, Omega, tau, kmax, tol, sec_missing)
     % assume noisy patch matrix is of size ([64 n2]) (double)
     % We have to apply singular value thresholding (tolerance 1e-5)
 
@@ -11,8 +11,10 @@ function [Q, iter]=svti(P, Omega, tau)
     for i=1:64
         Pi = P(i,:);
         sigma_bar(i) = std(Pi(Omega(i,:)));
-%         mu_bar = mean(Pi(Omega(i,:)));
-%         Omega(i,:) = Omega(i,:) & (Pi <= mu_bar + 2 * sigma_bar(i)) & (Pi >= mu_bar - 2 * sigma_bar(i));
+        if sec_missing
+            mu_bar = mean(Pi(Omega(i,:)));
+            Omega(i,:) = Omega(i,:) & (Pi <= mu_bar + 2 * sigma_bar(i)) & (Pi >= mu_bar - 2 * sigma_bar(i));
+        end
     end
     sigma_hat = mean(sigma_bar);
 
@@ -22,7 +24,7 @@ function [Q, iter]=svti(P, Omega, tau)
 
     Q = zeros(size(P), 'double');
 
-    for k=1:30
+    for k=1:kmax
         P_ = Q - P;
         P_(~Omega) = 0;
 
@@ -31,7 +33,7 @@ function [Q, iter]=svti(P, Omega, tau)
 
         Q_new = U(:,1:n) * diag(max(diag(S) - lambda, 0)) * V(:,1:n)';
 
-        if (norm(Q_new - Q, 'fro') <= 1e-5)
+        if (norm(Q_new - Q, 'fro') <= tol)
             break;
         end
 
