@@ -52,6 +52,7 @@ function [Q, iter]=svti(P, Omega, tau, kmax, tol, sec_missing)
 
         % Check convergence condition
         if (norm(Q_new - Q, 'fro') <= tol)
+            Q = Q_new;
             break;
         end
 
