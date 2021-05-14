@@ -29,9 +29,9 @@ noisy = noisemodel(frames, sigma, k, s);
 
 tic;
 tau = 1.5;
-kmax = 60;
+kmax = 30;
 tol = 1e-5;
-variant = '11';
+variant = '10';
 [recon, filtered] = LRMC(noisy, frameno, tau, kmax, tol, variant);
 toc;
 
