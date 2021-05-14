@@ -10,7 +10,7 @@ function [indices]=patchmatcher(patchArr, refj, refk, frameno)
     % Brief:
     %   Find 5 closest matches for the reference patch from each frame
 
-    [~ dim1 dim2 nframes] = size(patchArr)
+    [~, dim1, dim2, nframes] = size(patchArr);
 
     patch = cast(patchArr, 'double');
 
