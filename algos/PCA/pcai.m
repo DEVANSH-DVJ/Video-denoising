@@ -1,29 +1,30 @@
 
 function [pcaed]=pcai(P, C)
-    % assume noisy patch matrix is of size ([64 n2]) (double)
-    % n2 must be greater than 64
-    % We have to apply Principal Components Analysis
-    % taking C of the dimensions
+    % Input:
+    %   P : noisy patch matrix, [64 n2] (double)
+    %   C : number of dimensions to be reduced to
+    % Output:
+    %   pcaed : denoised patch matrix, [64 n2] (uint8)
+    % Brief:
+    %   Apply C-dimensional PCA on the patch matrix to remove noise
 
-    % Output would be denoised patch matrix of same dimension
-
-    % centering the data
+    % Centering the data
     meanpatch = mean(P,2);
     centered = P - meanpatch;
 
-    % normalising
-    arr = sqrt(sum(centered.^2, 2) / size(centered, 2)); % standard deviation
-    onebyarr = 1 ./ arr;
-    normalised = centered.*(onebyarr);
+    % Normalizing
+    std_arr = sqrt(sum(centered.^2, 2) / size(centered, 2));
+    reci_std_arr = 1 ./ std_arr;
+    normalised = centered .* reci_std_arr;
 
-    % principal component analysis
+    % Principal Component Analysis
     [coeff, score, ~] = pca(normalised');
 
-    % data with reduced dimensions
+    % Data with reduced (C) dimensions
     reduced = score(:,1:C) * ((coeff(:,1:C))');
 
-    % De-normalising
-    newcentered = (reduced').*arr;
+    % De-normalizing
+    newcentered = reduced' .* std_arr;
 
     % De-centering
     pcaed = newcentered + meanpatch;
