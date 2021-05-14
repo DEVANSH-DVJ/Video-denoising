@@ -12,9 +12,9 @@ addpath('../../libs/noisemodel');
 mov = yuv4mpeg2mov('../../data/carphone_qcif.y4m');
 
 % Update these parameters
-sigma = 50;
-k = 05;
-s = 00;
+sigma = 10;
+k = 10;
+s = 50;
 
 dim1 = size(mov(1).cdata, 1);
 dim2 = size(mov(1).cdata, 2);
