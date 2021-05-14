@@ -159,6 +159,8 @@ PCA - Principal Component Analysis
 
 SVD - Singular Value Decomposition
 
+VBM3D - Video block-matching and 3D filtering
+
 \vspace{7pt}
 
 \myline 
@@ -312,8 +314,8 @@ Test file: \texttt{libs/pcai/pcai\_test.m}
 We form the matrix $P_{j,k}$ using the matched patches. 
 The set of missing elements of $P_{j,k}$ has a subset of pixels 
 corrupted by impulsive noise using 
-the adaptive median filter based impulsive noise detector. 
-
+the adaptive median filter based impulsive noise detector, while
+ 
 Then, $\Omega$ is formed by including 
 the index of all remained pixels. 
 
@@ -446,7 +448,6 @@ Code file for PCA: \texttt{algos/PCA/PCA.m}
 
 \subsection*{Comparing Algorithms}
 
-Variants used:
 \begin{itemize}[noitemsep]
     \item \texttt{LRMC1} : Low Rank Matrix Completion Algorithm with variant `01', $\tau = 1.5$, k$_\text{max}$ 30, tol 1e-5
     \item \texttt{LRMC2} : Low Rank Matrix Completion Algorithm with variant `10', $\tau = 1.5$, k$_\text{max}$ 30, tol 1e-5
@@ -485,9 +486,35 @@ Variants used:
     \end{tabular}
 \end{table}
 
+\vspace{-2em}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{sigma10k10.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{sigma50k5.png}
+\end{figure}
+
+\textbf{Inferences}:
+
+\begin{itemize}
+    \item $\sigma = 10$, $\kappa = 10$ means low Gaussian and moderate Poisson noise. Here, PCA outperforms both LRMC and VBM3D by large margins, and LMRC performs almost on par with VBM3D+Adaptive Median Filter; moreover LRMC starts overtakes VBM3D+Adaptive Median Filter as impulsive noise increases.   
+    
+    \item $\sigma = 50$, $\kappa = 5$ means high Gaussian and low Poisson noise. Since VBM3D's noise model is based on additive white gaussian noise, here VBM3D (with median filtering to remove impulsive noise) performs better than both LRMC and PCA methods.
+    
+    \item In any case, as impulsive noise increases, VBM3D's performance decreases more steeply than PCA or LRMC. 
+    
+    \item Without adaptive median filtering (which is an integral part of our method), VBM3D fails to perform in almost all cases, as especially seen when there is high impulsive noise.
+\end{itemize}
+
+\newpage
 \subsection*{Comparing effects of change of parameters in LRMC}
 
-We work on $\sigma = 10$, $\kappa = 10$ and $s = 30\%$ for the following LRMC runs
+We work on $\sigma = 10$, $\kappa = 10$ and $s = 30\%$ for the following LRMC runs.
+
+k$_\text{max}$ is maximum number of iterations .
 
 \begin{table}[H]
     \centering
@@ -511,6 +538,88 @@ We work on $\sigma = 10$, $\kappa = 10$ and $s = 30\%$ for the following LRMC ru
          \hline
     \end{tabular}
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{kmax=30.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{kmax=60.png}
+\end{figure}
+
+\textbf{Inferences}:
+
+\begin{itemize}
+    \item $\tau$ denotes the step-size. It has been observed that for $\tau \in [1, 2]$, SVT algorithm converges.
+    \item For bigger step-size, i.e. for $\tau = 2$, we reach to convergence faster with less number of iterations for reaching the tolerance limit, with k$_\text{max} = 30$ giving satisfactory results.
+    \item For smaller step-size, i.e. for $\tau = 1$, we reach to convergence slower with more number of iterations for reaching the tolerance limit, wit k$_\text{max} = 30$ giving relative lower PSNR values. So, we require k$_\text{max} = 60$ to reach satisfactory results.
+    \item Also, comparing the variants, we can see that `01' gives the best results followed by `00', `11', `10', i.e. iteratively updating patch array gives better results but including second subset of missing pixels doesn't.
+\end{itemize}
+
+\newpage
+\subsection*{Comparing Reconstructed Images visually}
+
+\textbf{$\sigma = 10$, $\kappa = 10$, $s = 30\%$}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{10_10_30_LRMC1.png}
+    \caption{\texttt{LRMC1}, left to right - original, reconstructed, filtered, noisy frame}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{10_10_30_PCA2.png}
+    \caption{\texttt{PCA2}, left to right - original, reconstructed, filtered, noisy frame}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{10_10_30_VBM3D1.png}
+    \caption{\texttt{VBM3D1}, left to right - original, reconstructed, filtered, noisy frame}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{10_10_30_VBM3D2.png}
+    \caption{\texttt{VBM3D2}, left to right - original, reconstructed, noisy frame}
+\end{figure}
+
+\newpage
+\textbf{$\sigma = 10$, $\kappa = 10$, $s = 50\%$}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{10_10_50_LRMC1.png}
+    \caption{\texttt{LRMC1}, left to right - original, reconstructed, filtered, noisy frame}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{10_10_50_PCA2.png}
+    \caption{\texttt{PCA2}, left to right - original, reconstructed, filtered, noisy frame}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{10_10_50_VBM3D1.png}
+    \caption{\texttt{VBM3D1}, left to right - original, reconstructed, filtered, noisy frame}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{10_10_50_VBM3D2.png}
+    \caption{\texttt{VBM3D2}, left to right - original, reconstructed, noisy frame}
+\end{figure}
+
+\newpage
+\textbf{Inferences}:
+
+\begin{itemize}
+    \item Clearly, VBM3D without filtering doesn't make significant change to the noisy image and thus, is not a good denoiser for impulsive noise.
+  
+    \item Even if we add filtering before VBM3D, we can still see a lot of impulsive pixels distinctly visible.
+  
+    \item PCA2 gave the best PSNR of all PCAs and had better PSNR than both LRMC and VBM3D but it over-smoothens the image. Also, we don't know the appropriate value of C. For best results, we would have to use something like binary search.
+  
+    \item LRMC does a nice job removing the hazziness caused due to impulsive noise, even though it does add a bit of blurring due to low rank matrix completion run considering the impulsive pixels as missing pixels and gaussian and poisson blurring is carried to those pixels.
+    
+    \item LRMC algorithm does not use existing impulsive noise remover (adaptive median filter) to remove impulsive noise. Instead, it uses the existing impulsive noise detector to detect those damaged (missing) pixels which are further refined by a census along the row in the matched patch stack.
+\end{itemize}
 
 \end{document}
 
