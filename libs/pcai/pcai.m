@@ -2,7 +2,7 @@
 function [pcaed]=pcai(P, C)
     % Input:
     %   P : noisy patch matrix, [64 n2] (double)
-    %   C : number of dimensions to be reduced to
+    %   C : reduced dimension for PCA
     % Output:
     %   pcaed : denoised patch matrix, [64 n2] (uint8)
     % Brief:
